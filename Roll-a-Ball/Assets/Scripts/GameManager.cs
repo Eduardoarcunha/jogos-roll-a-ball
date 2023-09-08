@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.Menu);
     }
 
+
     public void ChangeState(GameState newGameState)
     {
         if (gameState == newGameState) return;
@@ -62,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        AudioManager.instance.StopSound("BackgroundMusic");
-        SceneManager.LoadScene("GameOver");
+        // AudioManager.instance.StopSound("BackgroundMusic");
+        // SceneManager.LoadScene("GameOver");
     }
 }

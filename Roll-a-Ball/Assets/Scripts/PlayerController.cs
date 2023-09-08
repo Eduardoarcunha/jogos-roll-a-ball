@@ -1,31 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public TextMeshProUGUI countText;
-    public GameObject winTextObject;
+    // public static event Action<GameState> OnBeforeGameStateChange;
 
-    private float speed = 13;
+    public TextMeshProUGUI countText;
+    public GameObject finalText;
+    public GameObject finalScoreText;
+
+    [SerializeField] private GameObject timeText;
+
+    private float speed = 14;
     private int count;
     private Rigidbody rb;
     private float movementX;
     private float movementY;
+    private float secondsPassed = 0;
+    private float time;
 
     // Start is called before the first frame update
     void Start()
     {
-        winTextObject.SetActive(false);
+        finalText.SetActive(false);
+        finalScoreText.SetActive(false);
         rb = GetComponent<Rigidbody>();
         count = 0;
 
         AudioManager.instance.PlaySound("BackgroundMusic");
 
-        
         SetCountText();
+    }
+
+    void Update()
+    {
+        secondsPassed += Time.deltaTime;
+        timeText.GetComponent<TextMeshProUGUI>().text = ((int) secondsPassed).ToString() + ":" + ((int) (secondsPassed * 100) % 100).ToString();
     }
 
     void OnMove(InputValue movementValue)
@@ -39,12 +53,11 @@ public class PlayerController : MonoBehaviour
     {
         countText.text = "Count: " + count.ToString();
         if (count >= 12){
-
-            winTextObject.SetActive(true);
+            time = secondsPassed;
+            GameOver();
         }
         
     }
-
 
     void FixedUpdate()
     {
@@ -54,29 +67,37 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PickUp")){
+        if (other.gameObject.CompareTag("PickUp"))
+        {
             AudioManager.instance.PlaySound("PoolBall");
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
-        }  
-        
+        }   
     }
 
     void GameOver()
     {
-        Debug.Log("Game Over");
+        finalText.SetActive(true);
+        finalScoreText.SetActive(true);
+
+        if (count >= 12){
+            finalText.GetComponent<TextMeshProUGUI>().text = "You Win! Try to improve your time!";
+            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString() + "\nTime: " + ((int) time).ToString() + ":" + ((int) (time * 100) % 100).ToString();
+        } else {
+            finalText.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString();
+        }
+
         GameManager.instance.ChangeState(GameManager.GameState.GameOver);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy")) // Check if it collided with an object tagged as "Enemy".
+        if (collision.gameObject.CompareTag("Enemy"))
         {   
-            // disable the player mov and then change the game state to game over
             gameObject.GetComponent<PlayerInput>().enabled = false;
-            Invoke("GameOver", 3);            
+            Invoke("GameOver", 1);            
         }
     }
-
 }
