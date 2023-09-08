@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
 
-    private float speed = 10;
+    private float speed = 13;
     private int count;
     private Rigidbody rb;
     private float movementX;
@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
         winTextObject.SetActive(false);
         rb = GetComponent<Rigidbody>();
         count = 0;
+
+        AudioManager.instance.PlaySound("BackgroundMusic");
 
         
         SetCountText();
@@ -53,10 +55,28 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PickUp")){
+            AudioManager.instance.PlaySound("PoolBall");
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
         }  
+        
+    }
+
+    void GameOver()
+    {
+        Debug.Log("Game Over");
+        GameManager.instance.ChangeState(GameManager.GameState.GameOver);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy")) // Check if it collided with an object tagged as "Enemy".
+        {   
+            // disable the player mov and then change the game state to game over
+            gameObject.GetComponent<PlayerInput>().enabled = false;
+            Invoke("GameOver", 3);            
+        }
     }
 
 }
