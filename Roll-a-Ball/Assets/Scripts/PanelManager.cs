@@ -12,6 +12,8 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject finalScoreText;
     [SerializeField] private GameObject finalText;
 
+    [SerializeField] private GameObject button;
+
     void Start()
     {
         GameManager.OnBeforeGameStateChange += ChangePanel;
@@ -39,6 +41,12 @@ public class PanelManager : MonoBehaviour
     {
         gamePanel.SetActive(false);
         engGamePanel.SetActive(true);
+        button.GetComponent<UnityEngine.UI.Button>().Select();
+    }
+
+    public void Restart()
+    {
+        GameManager.instance.ChangeState(GameManager.GameState.Play);
     }
 
     void OnDestroy()

@@ -82,10 +82,10 @@ public class PlayerController : MonoBehaviour
         finalScoreText.SetActive(true);
 
         if (count >= 12){
-            finalText.GetComponent<TextMeshProUGUI>().text = "You Win! Try to improve your time!";
-            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString() + "\nTime: " + ((int) time).ToString() + ":" + ((int) (time * 100) % 100).ToString();
+            finalText.GetComponent<TextMeshProUGUI>().text = "You Won! Try to improve your time!";
+            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString() + "\nTime: " + ((int) time).ToString() + "." + ((int) (time * 100) % 100).ToString();
         } else {
-            finalText.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+            finalText.GetComponent<TextMeshProUGUI>().text = "You Lost!";
             finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString();
         }
 
