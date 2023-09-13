@@ -4,26 +4,34 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
-    [SerializeField] private GameObject player;
+    private GameObject player;
     private Rigidbody rb;
     private Vector3 playerPosition;
-    // Start is called before the first frame update
+    private float speed = .5f;
+
     void Start()
     {
+        player = GameObject.FindWithTag("Player");
         rb = GetComponent<Rigidbody>();
         playerPosition = player.transform.position;
+
+        LevelManager.OnIncreaseSpeed += IncreaseSpeed;
     }
 
-    // Update is called once per frame
     void Update()
     {
         playerPosition = player.transform.position;
         Vector3 direction = playerPosition - transform.position;
-        rb.AddForce(direction.normalized);
+        rb.AddForce(direction.normalized * speed);
+    }
 
-        // apply force to move towards player according to a speed
+    void IncreaseSpeed()
+    {
+        speed += .5f;
+    }
 
-
+    void OnDestroy()
+    {
+        LevelManager.OnIncreaseSpeed -= IncreaseSpeed;
     }
 }

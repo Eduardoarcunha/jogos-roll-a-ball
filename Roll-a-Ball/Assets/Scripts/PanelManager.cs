@@ -8,37 +8,32 @@ public class PanelManager : MonoBehaviour
     
     [SerializeField] private GameObject gamePanel;
     [SerializeField] TextMeshProUGUI countText;
-    [SerializeField] private GameObject timeText;
+    [SerializeField] private GameObject popUp;
 
     [SerializeField] private GameObject engGamePanel;
     [SerializeField] private GameObject finalScoreText;
     [SerializeField] private GameObject finalText;
     [SerializeField] private GameObject button;
 
+
     private int count = 0;
-    private float time = 0;
-    private float secondsPassed = 0;
+    private GameObject popUpText;
     
     void Start()
     {
-        finalText.SetActive(false);
-        finalScoreText.SetActive(false);
-        
         GameManager.OnBeforeGameStateChange += ChangePanel;
         PlayerController.OnPickupCollected += IncreaseCount;
         PlayerController.OnGameOver += GameOver;
+        LevelManager.OnEnemySpawned += EnemySpawned;
+        LevelManager.OnIncreaseSpeed += SpeedPopup;
 
+        finalText.SetActive(false);
+        finalScoreText.SetActive(false);
         countText.text = "Count: " + count.ToString();
+        popUpText = popUp.transform.GetChild(0).gameObject;
     }
 
-    void Update()
-    {
-        secondsPassed += Time.deltaTime;
-        time = secondsPassed;
-        timeText.GetComponent<TextMeshProUGUI>().text = ((int) secondsPassed).ToString() + ":" + ((int) (secondsPassed * 100) % 100).ToString();
-    }
-
-    private void IncreaseCount()
+    private void IncreaseCount(GameObject pickup)
     {
         count++;
         countText.text = "Count: " + count.ToString();
@@ -49,15 +44,38 @@ public class PanelManager : MonoBehaviour
         finalText.SetActive(true);
         finalScoreText.SetActive(true);
 
-        if (count >= 12){
-            finalText.GetComponent<TextMeshProUGUI>().text = "You Won! Try to improve your time!";
-            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString() + "\nTime: " + ((int) time).ToString() + "." + ((int) (time * 100) % 100).ToString();
-        } else {
-            finalText.GetComponent<TextMeshProUGUI>().text = "You Lost!";
-            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString();
-        }
+        
+        finalText.GetComponent<TextMeshProUGUI>().text = "Game End!";
+        finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString();
+
 
         GameManager.instance.ChangeState(GameManager.GameState.GameOver);
+    }
+
+    void EnemySpawned()
+    {
+        StartCoroutine(EnemyPopup());
+    }
+
+    void SpeedPopup()
+    {
+        StartCoroutine(SpeedPopupCoroutine());
+    }
+
+    IEnumerator EnemyPopup()
+    {
+        popUp.SetActive(true);
+        popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy Spawned!";
+        yield return new WaitForSeconds(1);
+        popUp.SetActive(false);
+    }
+
+    IEnumerator SpeedPopupCoroutine()
+    {
+        popUp.SetActive(true);
+        popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy got faster!";
+        yield return new WaitForSeconds(1);
+        popUp.SetActive(false);
     }
         
     private void ChangePanel(GameManager.GameState newGameState)
@@ -95,5 +113,7 @@ public class PanelManager : MonoBehaviour
         GameManager.OnBeforeGameStateChange -= ChangePanel;
         PlayerController.OnPickupCollected -= IncreaseCount;
         PlayerController.OnGameOver -= GameOver;
+        LevelManager.OnEnemySpawned -= EnemySpawned;
+        LevelManager.OnIncreaseSpeed -= SpeedPopup;
     }
 }

@@ -7,7 +7,7 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public static event Action OnPickupCollected;
+    public static event Action<GameObject> OnPickupCollected;
     public static event Action OnGameOver;
 
     private Rigidbody rb;
@@ -46,14 +46,8 @@ public class PlayerController : MonoBehaviour
         {
             AudioManager.instance.PlaySound("PoolBall");
             other.gameObject.SetActive(false);
-            OnPickupCollected?.Invoke();
+            OnPickupCollected?.Invoke(other.gameObject);
             count++;
-            if (count == 12 && !gameEnd)
-            {
-                gameObject.GetComponent<PlayerInput>().enabled = false;
-                OnGameOver?.Invoke();
-                gameEnd = true;
-            }
         }   
     }
 
