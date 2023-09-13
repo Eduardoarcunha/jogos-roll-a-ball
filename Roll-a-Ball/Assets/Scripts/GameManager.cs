@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.Menu);
     }
 
-
     public void ChangeState(GameState newGameState)
     {
         if (gameState == newGameState) return;
@@ -45,7 +44,6 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene("Minigame");
                 break;
             case GameState.GameOver:
-                GameOver();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(gameState), gameState, null);
@@ -61,9 +59,4 @@ public class GameManager : MonoBehaviour
         GameOver = 2
     }
 
-    public void GameOver()
-    {
-        // AudioManager.instance.StopSound("BackgroundMusic");
-        // SceneManager.LoadScene("GameOver");
-    }
 }

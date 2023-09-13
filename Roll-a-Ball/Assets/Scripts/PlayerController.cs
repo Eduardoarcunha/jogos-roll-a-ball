@@ -7,39 +7,23 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    // public static event Action<GameState> OnBeforeGameStateChange;
+    public static event Action OnPickupCollected;
+    public static event Action OnGameOver;
 
-    public TextMeshProUGUI countText;
-    public GameObject finalText;
-    public GameObject finalScoreText;
-
-    [SerializeField] private GameObject timeText;
-
-    private float speed = 14;
-    private int count;
     private Rigidbody rb;
+
     private float movementX;
     private float movementY;
-    private float secondsPassed = 0;
-    private float time;
+    private float speed = 14;
+    private int count = 0;
 
-    // Start is called before the first frame update
+    private bool gameEnd = false;
+
+
     void Start()
     {
-        finalText.SetActive(false);
-        finalScoreText.SetActive(false);
         rb = GetComponent<Rigidbody>();
-        count = 0;
-
         AudioManager.instance.PlaySound("BackgroundMusic");
-
-        SetCountText();
-    }
-
-    void Update()
-    {
-        secondsPassed += Time.deltaTime;
-        timeText.GetComponent<TextMeshProUGUI>().text = ((int) secondsPassed).ToString() + ":" + ((int) (secondsPassed * 100) % 100).ToString();
     }
 
     void OnMove(InputValue movementValue)
@@ -49,15 +33,6 @@ public class PlayerController : MonoBehaviour
         movementY = movementVector.y;
     }
 
-    void SetCountText()
-    {
-        countText.text = "Count: " + count.ToString();
-        if (count >= 12){
-            time = secondsPassed;
-            GameOver();
-        }
-        
-    }
 
     void FixedUpdate()
     {
@@ -71,25 +46,15 @@ public class PlayerController : MonoBehaviour
         {
             AudioManager.instance.PlaySound("PoolBall");
             other.gameObject.SetActive(false);
+            OnPickupCollected?.Invoke();
             count++;
-            SetCountText();
+            if (count == 12 && !gameEnd)
+            {
+                gameObject.GetComponent<PlayerInput>().enabled = false;
+                OnGameOver?.Invoke();
+                gameEnd = true;
+            }
         }   
-    }
-
-    void GameOver()
-    {
-        finalText.SetActive(true);
-        finalScoreText.SetActive(true);
-
-        if (count >= 12){
-            finalText.GetComponent<TextMeshProUGUI>().text = "You Won! Try to improve your time!";
-            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString() + "\nTime: " + ((int) time).ToString() + "." + ((int) (time * 100) % 100).ToString();
-        } else {
-            finalText.GetComponent<TextMeshProUGUI>().text = "You Lost!";
-            finalScoreText.GetComponent<TextMeshProUGUI>().text = "Final Score: " + count.ToString();
-        }
-
-        GameManager.instance.ChangeState(GameManager.GameState.GameOver);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -97,7 +62,10 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {   
             gameObject.GetComponent<PlayerInput>().enabled = false;
-            Invoke("GameOver", 1);            
+            if (!gameEnd){
+                OnGameOver?.Invoke();
+                gameEnd = true;
+            }
         }
     }
 }
