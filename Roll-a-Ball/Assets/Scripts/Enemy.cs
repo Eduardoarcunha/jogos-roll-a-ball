@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     {
         playerPosition = player.transform.position;
         Vector3 direction = playerPosition - transform.position;
-        rb.AddForce(direction.normalized * 2);
+        rb.AddForce(direction.normalized);
 
         // apply force to move towards player according to a speed
 
