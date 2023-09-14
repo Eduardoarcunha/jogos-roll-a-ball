@@ -8,16 +8,17 @@ public class PanelManager : MonoBehaviour
     
     [SerializeField] private GameObject gamePanel;
     [SerializeField] TextMeshProUGUI countText;
-    [SerializeField] private GameObject popUp;
+    [SerializeField] private GameObject popUpText;
+    
 
     [SerializeField] private GameObject engGamePanel;
     [SerializeField] private GameObject finalScoreText;
     [SerializeField] private GameObject finalText;
     [SerializeField] private GameObject button;
 
-
+    private Animator popUpAnimator;
     private int count = 0;
-    private GameObject popUpText;
+    // private GameObject popUpText;
     
     void Start()
     {
@@ -27,10 +28,12 @@ public class PanelManager : MonoBehaviour
         LevelManager.OnEnemySpawned += EnemySpawned;
         LevelManager.OnIncreaseSpeed += SpeedPopup;
 
+        popUpAnimator = popUpText.GetComponent<Animator>();
+
         finalText.SetActive(false);
         finalScoreText.SetActive(false);
         countText.text = "Count: " + count.ToString();
-        popUpText = popUp.transform.GetChild(0).gameObject;
+        // popUpText = popUp.transform.GetChild(0).gameObject;
     }
 
     private void IncreaseCount(GameObject pickup)
@@ -64,18 +67,19 @@ public class PanelManager : MonoBehaviour
 
     IEnumerator EnemyPopup()
     {
-        popUp.SetActive(true);
+        popUpText.SetActive(true);
         popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy Spawned!";
-        yield return new WaitForSeconds(1);
-        popUp.SetActive(false);
+        yield return new WaitForSeconds(2);
+        popUpText.SetActive(false);
     }
 
     IEnumerator SpeedPopupCoroutine()
     {
-        popUp.SetActive(true);
+        popUpText.SetActive(true);
         popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy got faster!";
-        yield return new WaitForSeconds(1);
-        popUp.SetActive(false);
+        // when animation is done, disable the popup
+        yield return new WaitForSeconds(2);
+        popUpText.SetActive(false);
     }
         
     private void ChangePanel(GameManager.GameState newGameState)
