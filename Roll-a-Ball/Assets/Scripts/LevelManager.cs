@@ -7,7 +7,6 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
-    [SerializeField] private GameObject pickupPrefab;
     [SerializeField] private GameObject enemyPrefab;
 
     private float enemyCooldown = 5f;

@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
 
     void IncreaseSpeed()
     {
-        speed += .5f;
+        speed += .25f;
     }
 
     void OnDestroy()
