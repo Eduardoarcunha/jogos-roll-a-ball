@@ -468,7 +468,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 359.2463, y: 50}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &659492248
 MonoBehaviour:
@@ -490,7 +490,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: POOL GAME
+  m_text: ROLL A POOL BALL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ad44b6463a9ad64384591c7afcadc93, type: 2}
   m_sharedMaterial: {fileID: 6401174538433899391, guid: 9ad44b6463a9ad64384591c7afcadc93, type: 2}
