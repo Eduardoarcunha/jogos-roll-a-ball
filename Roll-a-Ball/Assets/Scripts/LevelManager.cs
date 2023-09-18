@@ -7,6 +7,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
+    [SerializeField] private GameObject player;
     [SerializeField] private GameObject enemyPrefab;
 
     private float enemyCooldown = 5f;
@@ -49,7 +50,14 @@ public class LevelManager : MonoBehaviour
 
     void SpawnEnemy()
     {
+        Vector3 random_position;
         GameObject enemy = Instantiate(enemyPrefab);
+
+        do 
+        {
+            random_position = new Vector3(UnityEngine.Random.Range(-6,6), 6, UnityEngine.Random.Range(-6,6));
+        } while (Vector3.Distance(random_position, player.transform.position) < 2.0f);
+    
         enemy.transform.position = new Vector3(UnityEngine.Random.Range(-6,6), 6, UnityEngine.Random.Range(-6,6));
     }
 

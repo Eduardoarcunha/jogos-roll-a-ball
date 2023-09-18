@@ -38,7 +38,8 @@ public class PanelManager : MonoBehaviour
         finalText.SetActive(false);
         finalScoreText.SetActive(false);
         countText.text = "Count: " + count.ToString();
-        // popUpText = popUp.transform.GetChild(0).gameObject;
+
+        StartCoroutine(GameStartCouroutine(popUpText));
     }
 
     void Update()
@@ -85,8 +86,8 @@ public class PanelManager : MonoBehaviour
     IEnumerator EnemyPopup()
     {
         popUpText.SetActive(true);
-        popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy Spawned!";
-        yield return new WaitForSeconds(2);
+        popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy spawned!";
+        yield return new WaitForSeconds(3f);
         popUpText.SetActive(false);
     }
 
@@ -95,8 +96,17 @@ public class PanelManager : MonoBehaviour
         popUpText.SetActive(true);
         popUpText.GetComponent<TextMeshProUGUI>().text = "Enemy got faster!";
         // when animation is done, disable the popup
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3f);
         popUpText.SetActive(false);
+    }
+    
+    IEnumerator GameStartCouroutine(GameObject pickup)
+    {
+        popUpText.SetActive(true);
+        popUpText.GetComponent<TextMeshProUGUI>().text = "Collect the max balls you can!";
+        yield return new WaitForSeconds(3f);
+        popUpText.SetActive(false);
+
     }
         
     private void ChangePanel(GameManager.GameState newGameState)
